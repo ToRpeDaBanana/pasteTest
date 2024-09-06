@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}PasteTest{% endblock %}</title>
+
+        {% block stylesheets %}
+        
+        {% endblock %}
+
+
+    </head>
+    <body>
+        {% block body %}
+
+            <h2>Recent Pastes</h2>
+            <ul>
+            {% if (is not empty pastes) %}
+                {% for paste in pastes %}
+                    <li>{{ paste.title }} - {{ paste.content }}</li>
+                {% endfor %}\
+            {% endif %}
+            </ul>
+
+        {% endblock %}
+    </body>
+</html>

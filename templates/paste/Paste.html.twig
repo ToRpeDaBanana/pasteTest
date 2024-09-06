@@ -1,0 +1,10 @@
+{% extends 'index.html.twig' %}
+
+{% block body %}
+    <h2>Upload a new paste</h2>
+    <form method="post" action="{{ path('create_paste') }}">
+        <input type="text" name="title" placeholder="Title" required>
+        <textarea name="content" placeholder="Content" required></textarea>
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}
