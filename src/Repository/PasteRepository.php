@@ -15,7 +15,15 @@ class PasteRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Paste::class);
     }
+    
+    public function findExpiredPastes(): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.expirationTime < :now')
+            ->setParameter('now', new DateTime('now'));
 
+        return $qb->getQuery()->getResult();
+    }
     //    /**
     //     * @return Paste[] Returns an array of Paste objects
     //     */

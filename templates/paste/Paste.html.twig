@@ -2,9 +2,11 @@
 
 {% block body %}
     <h2>Upload a new paste</h2>
-    <form method="post" action="{{ path('create_paste') }}">
-        <input type="text" name="title" placeholder="Title" required>
-        <textarea name="content" placeholder="Content" required></textarea>
-        <button type="submit">Submit</button>
-    </form>
+    {{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.content, {'attr':{'class':'content-area'}}) }}
+    {{ form_row(form.expirationTime) }}
+    {{ form_row(form.accessLevel) }}
+    {{ form_row(form.submit) }}
+{{ form_end(form) }}
 {% endblock %}

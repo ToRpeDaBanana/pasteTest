@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -10,7 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -20,15 +19,14 @@ class User
     #[ORM\Column(length: 180, unique:true)]
     private ?string $username = null;
 
-    /**
-     * @var string The hashed password
-     */
+    /** @var string The hashed password */
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    /**
-     * @var Collection<int, Paste>
-     */
+    #[ORM\Column(nullable:true)]
+    private ?array $roles = null;
+
+    /** @var Collection<int, Paste> */
     #[ORM\OneToMany(targetEntity: Paste::class, mappedBy: 'user')]
     private Collection $pastes;
 
@@ -46,11 +44,8 @@ class User
     {
         return $this->username;
     }
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
+
+    /** @see UserInterface */
     public function getUserIdentifier(): string
     {
         return (string) $this->username;
@@ -62,10 +57,25 @@ class User
 
         return $this;
     }
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
 
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /** @see PasswordAuthenticatedUserInterface */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -77,18 +87,14 @@ class User
 
         return $this;
     }
-    /**
-     * @see UserInterface
-     */
+
+    /** @see UserInterface */
     public function eraseCredentials()
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        // Очищаем временные данные, если есть
     }
-    
-    /**
-     * @return Collection<int, Paste>
-     */
+
+    /** @return Collection<int, Paste> */
     public function getPastes(): Collection
     {
         return $this->pastes;
@@ -107,7 +113,6 @@ class User
     public function removePaste(Paste $paste): static
     {
         if ($this->pastes->removeElement($paste)) {
-            // set the owning side to null (unless already changed)
             if ($paste->getUser() === $this) {
                 $paste->setUser(null);
             }
@@ -115,4 +120,6 @@ class User
 
         return $this;
     }
+
+
 }

@@ -5,7 +5,7 @@
         <title>{% block title %}PasteTest{% endblock %}</title>
 
         {% block stylesheets %}
-        
+            {{encore_entry_link_tags('app')}}
         {% endblock %}
 
 
@@ -15,10 +15,10 @@
 
             <h2>Recent Pastes</h2>
             <ul>
-            {% if (is not empty pastes) %}
+            {% if (pastes is not empty) %}
                 {% for paste in pastes %}
                     <li>{{ paste.title }} - {{ paste.content }}</li>
-                {% endfor %}\
+                {% endfor %}
             {% endif %}
             </ul>
 
