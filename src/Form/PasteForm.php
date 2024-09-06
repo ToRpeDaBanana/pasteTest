@@ -22,12 +22,16 @@ class PasteForm extends AbstractType
             ->add('title', TextType::Class,[
                 'label' => 'Title',
             ])
-            ->add('content', TextType::Class,[
+            ->add('content', TextareaType::Class,[
                 'label' => 'Content',
+                'attr' => [
+                    'class' => 'no-resize'
+                ]
             ])
             ->add('expirationTime', ChoiceType::class, [
                 'label' => 'Expiration Time',
                 'choices' => [
+                    '20 Second' => new \DateTime("+20 second"),
                     '10 Minutes' => new \DateTime("+10 minutes"),
                     '1 Hour' => new \DateTime("+1 hour"),
                     '3 Hours' => new \DateTime("+3 hours"),

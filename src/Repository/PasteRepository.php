@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Paste;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * @extends ServiceEntityRepository<Paste>
@@ -15,12 +16,14 @@ class PasteRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Paste::class);
     }
-    
+
     public function findExpiredPastes(): array
     {
+        $now = (new \DateTime('now'))->format('Y-m-d H:i:s');
+
         $qb = $this->createQueryBuilder('p')
             ->where('p.expirationTime < :now')
-            ->setParameter('now', new DateTime('now'));
+            ->setParameter('now', $now);
 
         return $qb->getQuery()->getResult();
     }

@@ -27,7 +27,7 @@ class Paste
     private ?string $accessLevel = null;
 
     #[ORM\ManyToOne(inversedBy: 'pastes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
 
     public function getId(): ?int
