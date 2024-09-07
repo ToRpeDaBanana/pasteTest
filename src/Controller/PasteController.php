@@ -31,9 +31,13 @@ class PasteController extends AbstractController
 
         $form->handleRequest($request);
 
+        
+
         if ($form->isSubmitted() && $form->isValid()) {
             $expirationTime = $form->get('expirationTime')->getData();
             $paste->setExpirationTime($expirationTime);
+            
+
             // получение юзера
             if($loggedIn != false)
             {

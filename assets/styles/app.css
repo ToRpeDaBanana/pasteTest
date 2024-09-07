@@ -1,6 +1,49 @@
-
 .no-resize {
     resize: none;
     width: 15%;
     height: 280px;
+    overflow: hidden;
+}
+
+.code-container {
+    position: relative;
+}
+
+.highlighted-code {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 240%;
+    height: 100%;
+    pointer-events: none; /* Чтобы клики не блокировали ввод в textarea */
+    overflow: auto; /* Чтобы можно было прокручивать содержимое */
+    background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный фон для выделения */
+    z-index: 2; /* Убедитесь, что элемент над textarea */
+}
+
+textarea.no-resize {
+    position: relative;
+    z-index: 1; /* Убедитесь, что textarea выше выделенного кода */
+    width: 100%; /* Полная ширина */
+    height: 100%; /* Используем высоту из .no-resize */
+}
+.language-default {
+    background: #f5f5f5; /* Светлый фон, как у Prism */
+    color: #333;  /* Цвет текста */
+    padding: 10px; /* Отступы */
+    border-radius: 4px; /* Скругление углов */
+}
+.cursor {
+    position: absolute;
+    background-color: black; /* Цвет курсора */
+    width: 2px; /* Ширина курсора */
+    height: 1em; /* Высота курсора */
+    animation: blink 1s step-end infinite; /* Анимация мигания */
+    pointer-events: none; /* Игнорировать события мыши */
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0; /* Полупрозрачный на 50% */
+    }
 }

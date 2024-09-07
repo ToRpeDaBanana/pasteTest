@@ -25,13 +25,13 @@ class PasteForm extends AbstractType
             ->add('content', TextareaType::Class,[
                 'label' => 'Content',
                 'attr' => [
-                    'class' => 'no-resize'
+                    'class' => 'no-resize',
+                    'id' => 'contentInput',
                 ]
             ])
             ->add('expirationTime', ChoiceType::class, [
                 'label' => 'Expiration Time',
                 'choices' => [
-                    '20 Second' => new \DateTime("+20 second"),
                     '10 Minutes' => new \DateTime("+10 minutes"),
                     '1 Hour' => new \DateTime("+1 hour"),
                     '3 Hours' => new \DateTime("+3 hours"),
@@ -41,6 +41,22 @@ class PasteForm extends AbstractType
                     'No Expiration' => null,
                 ],
                 'placeholder' => 'Choose an option',
+            ])
+            ->add('language', ChoiceType::class, [
+                'label' => 'Programming Language',
+                'choices' => [
+                    'JavaScript' => 'javascript',
+                    // 'Python' => 'python',
+                    // 'PHP' => 'php',
+                    // 'Java' => 'java',
+                    // 'C#' => 'csharp',
+                    // 'Ruby' => 'ruby',
+                    'HTML' => 'html',
+                    'CSS' => 'css',
+                    'No Language' => 'none'
+                ],
+                'placeholder' => 'Choose an option',
+                'data' => 'none',
             ])
             ->add('accessLevel', ChoiceType::class, [
                 'label' => 'Access Level',

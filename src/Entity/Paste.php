@@ -26,6 +26,9 @@ class Paste
     #[ORM\Column(length: 255)]
     private ?string $accessLevel = null;
 
+    #[ORM\Column(length: 100)]
+    private ?string $language = null;
+
     #[ORM\ManyToOne(inversedBy: 'pastes')]
     #[ORM\JoinColumn(nullable: true)]
     private ?User $user = null;
@@ -94,4 +97,14 @@ class Paste
 
         return $this;
     }
+    public function getLanguage(): ?string
+{
+    return $this->language;
+}
+
+public function setLanguage(?string $language): self
+{
+    $this->language = $language;
+    return $this;
+}
 }

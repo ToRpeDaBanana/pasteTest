@@ -2,10 +2,19 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/themes/prism.min.css" rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.25.0/prism.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link href="themes/prism.css" rel="stylesheet" />
         <title>{% block title %}PasteTest{% endblock %}</title>
 
         {% block stylesheets %}
             {{encore_entry_link_tags('app')}}
+        {% endblock %}
+
+        {% block javascript %}
+            {{encore_entry_script_tags('app')}}
         {% endblock %}
 
 
