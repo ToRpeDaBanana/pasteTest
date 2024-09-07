@@ -1,4 +1,4 @@
-.no-resize {
+/* .no-resize {
     resize: none;
     width: 15%;
     height: 280px;
@@ -13,24 +13,236 @@ a{
 }
 .conta-btn{
     display: flex;
+} */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    color: #ccc;
+    font-family: 'Times new romans', monospace;
 }
 .popup-overlay {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 1000;
+    z-index: 999;
 }
 .popup {
+    display: none;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
     padding: 20px;
-    z-index: 1001;
     border-radius: 5px;
+    z-index: 1000;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.navbar {
+    background-color: #007bff;
+    padding: 1rem;
+}
+
+.navbar a {
+    color: white;
+    margin-right: 20px;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.container {
+    flex: 1;
+    display: inline-block; /* Позволяет контейнеру расширяться по содержимому */
+    padding: 20px;
+    background-color: #272a34;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-top: 30px;
+}
+
+.form-control {
+    background-color: #2e2e2e;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.form-control:focus {
+    border-color: #66d9ef;
+    outline: none;
+    box-shadow: 0 0 5px rgba(102, 217, 239, 0.5);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #212529;
+    color: white;
+    margin-top: auto; /* Автоматический отступ сверху, чтобы прижать футер вниз */
+}
+.form-control {
+    background-color: #2e2e2e;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.form-control:focus {
+    border-color: #66d9ef;
+    outline: none;
+    box-shadow: 0 0 5px rgba(102, 217, 239, 0.5);
+}
+
+textarea.form-control {
+    background-color: #2e2e2e;
+    resize: none;
+    width: 100%;
+    height: 250px;
+}
+
+textarea.form-control:focus {
+    background-color: #2e2e2e;
+    color: #fff;
+    border-color: #66d9ef;
+    box-shadow: 0 0 5px rgba(102, 217, 239, 0.5);
+}
+
+
+input.form-control {
+    background-color: #2e2e2e;
+}
+
+input.form-control:focus {
+    background-color: #2e2e2e;
+    color: #fff;
+    border-color: #66d9ef;
+    box-shadow: 0 0 5px rgba(102, 217, 239, 0.5);
+}
+
+select.form-control {
+    background-color: #2e2e2e; 
+}
+
+select.form-control:focus {
+    background-color: #2e2e2e;
+    color: #fff;
+    border-color: #66d9ef; 
+    box-shadow: 0 0 5px rgba(102, 217, 239, 0.5); 
+}
+a, button {
+    text-decoration: none; /* Убираем линию подчеркивания у ссылок */
+}
+
+a:hover, button:hover {
+    text-decoration: none; /* Убираем линию при наведении у ссылок и кнопок */
+}
+h2 {
+    color: #66d9ef; /* Цвет для заголовка */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+
+pre {
+    background-color: #272a34; /* Фоновый цвет для блока кода */
+    padding: 10px; /* Внутренние отступы */
+    border-radius: 5px; /* Скругление углов */
+    overflow: auto; /* Прокрутка при переполнении */
+    color: #fff; /* Цвет текста */
+}
+
+code {
+    color: #f8f8f2; /* Цвет кода */
+    font-family: 'Courier New', monospace; /* Шрифт для кода */
+}
+.list-group-item {
+    background-color: #2e2e2e; /* Фоновый цвет для элементов списка */
+    color: #ccc; /* Цвет текста */
+    border: 1px solid #444; /* Рамка для элемента списка */
+}
+    
+.list-group-item:hover {
+    background-color: #3e3e3e; /* Изменение фона при наведении */
+}
+
+.paste-title {
+    color: #66d9ef; /* Цвет заголовка пасты */
+}
+
+.paste-language {
+    color: #aaa; /* Цвет языка пасты */
+}
+
+.btn-secondary {
+    background-color: #007bff; /* Цвет фона для кнопки */
+    border: none; /* Убираем границы */
+}
+
+.btn-secondary:hover {
+    background-color: #0056b3; /* Цвет фона при наведении */
+}
+
+/* Дополнительные отступы */
+.container {
+    padding: 20px; /* Отступы внутри контейнера */
+}
+
+h2 {
+    color: #66d9ef; /* Цвет для заголовка */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+
+.main-container {
+    display: flex; /* Используем flexbox для выравнивания блоков */
+    margin: 30px; /* Отступ вокруг основной структуры */
+    justify-content: center;
+}
+
+.content {
+    flex: 0 0 60%; /* Основной контент занимает 90% ширины */
+    padding: 20px;
+    background-color: #272a34; /* Фоновый цвет основного контента */
+    border-radius: 5px; /* Скругление углов основного контента */
+}
+
+.sidebar {
+    flex: 0 0 20%; /* Боковой блок занимает 10% ширины */
+    padding: 20px;
+    background-color: #272a34; /* Цвет фона бокового блока */
+    border-radius: 5px; /* Скругление углов бокового блока */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Тень для бокового блока */
+    margin-left: 20px; /* Отступ между основным контентом и боковым блоком */
+}
+
+.sidebar-title {
+    color: #66d9ef; /* Цвет заголовка бокового блока */
+    margin-bottom: 20px; /* Отступ снизу */
+}
+
+.paste-list-group {
+    list-style-type: none; /* Убираем маркеры у списка */
+    padding: 0; /* Убираем отступы по умолчанию */
+    margin: 0; /* Убираем внешние отступы по умолчанию */
+}
+.button-container {
+    display: flex; /* Используем flexbox для расположения кнопок в одном ряду */
+    justify-content: center; /* Центруем кнопки */
+    margin-top: 20px; /* Отступ сверху для кнопок */
+}
+
+.button-container a {
+    margin-left: 10px; /* Отступ между кнопками */
+}
+ul.pagination{
+    justify-content: center;
 }

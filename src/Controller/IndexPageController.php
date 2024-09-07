@@ -19,17 +19,32 @@ class IndexPageController extends AbstractController
         Request $request, 
     ): Response
     {   
+        $user = $this->getUser(); // Получаем текущего авторизованного пользователя
+
+        // Получаем публичные пасты
         $pasteData = $entityManager->getRepository(Paste::class)->findBy(
             ['accessLevel' => 'public'], // Условия поиска
-            ['expirationTime' => 'DESC'], // Сортировка по дате создания (предполагается, что поле существует)
+            ['id' => 'DESC'], // Сортировка по дате создания
             10 // Ограничение на количество записей
         );
+
+        // Получаем последние 10 паст текущего пользователя, если он авторизован
+        $userPastes = null;
+        if ($user) {
+            $userPastes = $entityManager->getRepository(Paste::class)->findBy(
+                ['user' => $user], // Условия поиска по пользователю
+                ['id' => 'DESC'], // Сортировка по дате создания
+                10 // Ограничение на количество записей
+            );
+        }
 
         $clear->cleanupExpiredPastes();
 
         return $this->render('index_page/index.html.twig', [
             'pasteData' => $pasteData,
             'total' => count($pasteData),
+            'userPastes' => $userPastes, // Передаем пасты пользователя в шаблон
         ]);
     }
 }
+

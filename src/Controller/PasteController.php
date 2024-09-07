@@ -24,14 +24,13 @@ class PasteController extends AbstractController
         PasteCleanupService $clear,
     ): Response
     {
-        $loggedIn = $sessionInterface->get('logged_in');
-        $userId = $sessionInterface->get('user_id');
+        // Получаем аутентифицированного пользователя
+        $user = $this->getUser();
+        
         $paste = new Paste();
         $form = $this->createForm(PasteForm::class, $paste);
 
         $form->handleRequest($request);
-
-
 
         if ($form->isSubmitted() && $form->isValid()) {
             $expirationTime = $form->get('expirationTime')->getData();
@@ -42,47 +41,55 @@ class PasteController extends AbstractController
             $uniqueId = md5(uniqid((string) rand(), true));
             $paste->setUniqueId($uniqueId);
 
-            // получение юзера
-            if($loggedIn != false)
-            {
-                $user = $entityManager->getRepository(User::Class)->findOneBy(['id'=> $userId]);
-                $paste->setUser($user);
+            // Получение юзера
+            if ($user) {
+                $paste->setUser($user); // Устанавливаем текущего аутентифицированного пользователя
+            } else {
+                $paste->setUser(null); // Если не аутентифицирован, присваиваем null
             }
-            else{
-                $paste->setUser(null);
-            }
-            
+
             // Сохранение пасты в базу данных
             $entityManager->persist($paste);
             $entityManager->flush();
 
+            // Создание полной ссылки на пасту
             if ($paste->getAccessLevel() === 'unlisted') {
-                // Создание полной ссылки на пасту
                 $link = $this->generateUrl('view_paste', ['uniqueId' => $uniqueId], true);
-                // Сохранение ссылки на пасту в сессии для отображения в поп-апе
-                $sessionInterface->set('linkUnlisted', $link);
-                $this->addFlash('success', 'Paste created successfully!');
-            } else {
+                $sessionInterface->set('linkUnlisted', $link); // Сохраняем ссылку в сессию
                 $this->addFlash('success', 'Paste created successfully!');
             }
 
-            $this->addFlash('success', 'Paste created successfully!');
             return $this->redirectToRoute('create_paste');
         }
-            
+        $pasteData = $entityManager->getRepository(Paste::class)->findBy(
+            ['accessLevel' => 'public'], // Условия поиска
+            ['id' => 'DESC'], // Сортировка по дате создания (предполагается, что поле существует)
+            10 // Ограничение на количество записей
+        );
+        $userPastes = null;
+        if ($user) {
+            $userPastes = $entityManager->getRepository(Paste::class)->findBy(
+                ['user' => $user], // Условия поиска по пользователю
+                ['id' => 'DESC'], // Сортировка по дате создания
+                10 // Ограничение на количество записей
+            );
+        }
         $clear->cleanupExpiredPastes();
-        
 
         return $this->render('paste/Paste.html.twig', [
             'form' => $form->createView(),
-            'userData'=>$user=$entityManager->getRepository(User::Class)->findOneBy(['id'=> $userId]),
-            'auth'=>$loggedIn,
-            ]);
+            'userData' => $user,
+            'auth' => (bool)$user,
+            'pasteData' => $pasteData,
+            'total' => count($pasteData),
+            'userPastes' => $userPastes, // Передаем пасты пользователя в шаблон
+        ]);
     }
-    
-    #[Route('/viewPaste/{uniqueId}', name: 'view_paste')]
-    public function viewPaste(string $uniqueId, EntityManagerInterface $entityManager): Response
+
+    #[Route('/viewPasteUnlisted/{uniqueId}', name: 'view_paste_unlisted')]
+    public function viewPasteUnlisted(string $uniqueId, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
         $paste = $entityManager->getRepository(Paste::class)->findOneBy(['uniqueId' => $uniqueId]);
 
         if (!$paste || $paste->getAccessLevel() !== 'unlisted') {
@@ -91,6 +98,30 @@ class PasteController extends AbstractController
 
         return $this->render('paste/view_paste.html.twig', [
             'paste' => $paste,
+            'user' => $user,
         ]);
     }
+
+    #[Route('/viewPaste/{id}', name: 'view_paste')]
+    public function viewPaste(string $id, EntityManagerInterface $entityManager): Response
+    {
+        $paste = $entityManager->getRepository(Paste::class)->find($id);
+
+        if (!$paste) {
+            throw $this->createNotFoundException('Паста не найдена.');
+        }
+
+        $user = $this->getUser();
+
+        // Проверяем уровень доступа
+        if ($paste->getAccessLevel() === 'private' && $paste->getUser() !== $user) {
+            throw $this->createAccessDeniedException(); // Доступ запрещен
+        }
+
+        return $this->render('paste/view_paste.html.twig', [
+            'paste' => $paste,
+            'user' => $user,
+        ]);
+    }
+
 }

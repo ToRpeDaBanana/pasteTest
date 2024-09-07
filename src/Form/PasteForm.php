@@ -20,30 +20,29 @@ class PasteForm extends AbstractType
         {
             $builder
             ->add('title', TextType::Class,[
-                'label' => 'Title',
+                'label' => 'Заголовок',
             ])
             ->add('content', TextareaType::Class,[
-                'label' => 'Content',
+                'label' => 'Контент',
                 'attr' => [
-                    'class' => 'no-resize',
                     'id' => 'contentInput',
                 ]
             ])
             ->add('expirationTime', ChoiceType::class, [
-                'label' => 'Expiration Time',
+                'label' => 'Время жизни',
                 'choices' => [
-                    '10 Minutes' => new \DateTime("+10 minutes"),
-                    '1 Hour' => new \DateTime("+1 hour"),
-                    '3 Hours' => new \DateTime("+3 hours"),
-                    '1 Day' => new \DateTime("+1 day"),
-                    '1 Week' => new \DateTime("+1 week"),
-                    '1 Month' => new \DateTime("+1 month"),
-                    'No Expiration' => null,
+                    '10 Минут' => new \DateTime("+10 minutes"),
+                    '1 Час' => new \DateTime("+1 hour"),
+                    '3 Часа' => new \DateTime("+3 hours"),
+                    '1 День' => new \DateTime("+1 day"),
+                    '1 Неделя' => new \DateTime("+1 week"),
+                    '1 Месяц' => new \DateTime("+1 month"),
+                    'Без срока' => null,
                 ],
-                'placeholder' => 'Choose an option',
+                'placeholder' => 'Выберите вариант',
             ])
             ->add('language', ChoiceType::class, [
-                'label' => 'Programming Language',
+                'label' => 'Язык программирования',
                 'choices' => [
                     'JavaScript' => 'javascript',
                     // 'Python' => 'python',
@@ -53,22 +52,22 @@ class PasteForm extends AbstractType
                     // 'Ruby' => 'ruby',
                     'HTML' => 'html',
                     'CSS' => 'css',
-                    'No Language' => 'none'
+                    'Нет' => 'none'
                 ],
-                'placeholder' => 'Choose an option',
+                'placeholder' => 'Выберите вариант',
                 'data' => 'none',
             ])
             ->add('accessLevel', ChoiceType::class, [
-                'label' => 'Access Level',
+                'label' => 'Уровень доступа',
                 'choices' => [
-                    'Public' => 'public',
-                    'Unlisted' => 'unlisted',
-                    'Private' => 'private',
+                    'Публичный' => 'public',
+                    'По ссылке' => 'unlisted',
+                    'Приватный' => 'private',
                 ],
-                'placeholder' => 'Choose an option',
+                'placeholder' => 'Выберите вариант',
             ])
             ->add('submit', SubmitType::Class,[
-                'label' => 'Create Paste',
+                'label' => 'Созадать пасту',
             ]);
         }
         public function configureOptions(OptionsResolver $resolver)

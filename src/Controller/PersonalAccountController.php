@@ -21,19 +21,26 @@ class PersonalAccountController extends AbstractController
         Request $request, 
     ): Response
     {
-        $loggedIn = $sessionInterface->get('logged_in');
-        $userId = $sessionInterface->get('user_id');
+        // Получаем аутентифицированного пользователя
+        $user = $this->getUser();
+        
+        // Проверка, что пользователь аутентифицирован
+        if (!$user) {
+            return $this->redirectToRoute('app_login'); // Перенаправить на страницу логина, если пользователь не аутентифицирован
+        }
 
+        $userId = $user->getId(); // Получаем ID пользователя
+        
         // Настройка пагинации
         $limit = 10; // Ограничение количества записей на страницу
         $page = $request->query->getInt('page', 1); // Получаем номер страницы из запроса (по умолчанию 1)
         $offset = ($page - 1) * $limit;
 
         $pasteData = $entityManager->getRepository(Paste::class)->findBy(['user' => $userId], null, $limit, $offset);
-
         $total = count($entityManager->getRepository(Paste::class)->findBy(['user' => $userId]));
 
         $clear->cleanupExpiredPastes();
+        
         return $this->render('personal_account/personalAccount.html.twig', [
             'pasteData' => $pasteData,
             'total' => $total,

@@ -1,52 +1,121 @@
 {% extends 'index.html.twig' %}
 
-
 {% block body %}
-    <h2>Upload a new paste</h2>
-    {{ form_start(form) }}
-        {{ form_row(form.title) }}
-        {{ form_row(form.content) }}
-        <div id="highlightedCode"></div>
-        {{ form_row(form.expirationTime) }}
-        {{ form_row(form.language) }}
-        {{ form_row(form.accessLevel) }}
-        {{ form_row(form.submit) }}
-    {{ form_end(form) }}
+    <div class="main-container">
+        <div class="content">
+            <h2 class="text-center">Загрузите новую пасту</h2>
+            {{ form_start(form) }}
+                <div class="form-group">
+                    {{ form_row(form.title, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.content, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div id="highlightedCode"></div>
+                <div class="form-group">
+                    {{ form_row(form.expirationTime, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.language, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.accessLevel, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.submit, { 'attr': {'class': 'form-control'} }) }}
+                </div>
+            {{ form_end(form) }}
 
-    {% if auth %}
-        <p>Hello,{{userData.username}}!</p>
-        <a href="{{path('app_personal_account')}}">
-            <button>Account</button>
-        </a>
-        <a href="{{ path('app_logout') }}">
-            <button>Logout</button>
-        </a>
-        {% else %}
-            <p>Hello,Guest!</p>
-            <div class="conta-btn">
-                <a href="{{path('app_login')}}">
-                    <button>Sign In</button>
+            {% if auth %}
+                <p class="text-center">Привет, {{ userData.username }}!</p>
+                <a href="{{ path('app_personal_account') }}">
+                    <button class="btn btn-primary">Аккаунт</button>
                 </a>
-                <a href="{{path('register')}}">
-                    <button>Sign Up</button>
+                <a href="{{ path('app_logout') }}">
+                    <button class="btn btn-danger">Выйти</button>
                 </a>
+            {% else %}
+                <p class="text-center">Привет, Гость!</p>
+                <div class="conta-btn text-center">
+                    <a href="{{ path('app_login') }}">
+                        <button class="btn btn-secondary">Войти</button>
+                    </a>
+                    <a href="{{ path('register') }}">
+                        <button class="btn btn-secondary">Зарегистрироваться</button>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="sidebar">
+            <h2 class="sidebar-title text-center">Список паст</h2>
+            <div class="paste-list">
+                <ul class="paste-list-group">
+                    {% if pasteData is not empty %}
+                        {% for paste in pasteData | slice(0, 10) %}
+                            <li class="paste-list-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ loop.index }}.</strong>
+                                        <span class="paste-title">{{ paste.title }}</span> 
+                                        <br>
+                                        <small class="paste-language">{{ paste.language }}</small>
+                                    </div>
+                                    <div>
+                                        <a href="{{ path('view_paste', { 'id': paste.id }) }}" class="btn btn-secondary btn-sm">Перейти</a>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="paste-list-item">Нет доступных публичных паст.</li>
+                    {% endif %}
+                </ul>
             </div>
-    {% endif %}
-<script>
-    $(document).ready(function() {
-        // Получаем ссылку из сессии
-        const link = "{{ app.session.get('linkUnlisted')|e('js') }}";
-        if (link) {
-            $('<div class="popup-overlay"></div>').appendTo('body').fadeIn();
-            const $popup = $('<div class="popup"></div>').appendTo('body').fadeIn();
-            $popup.html(`<h3>Success!</h3><p>Your paste link: <a href="${link}" target="_blank">${link}</a></p><button id="closePopup">Close</button>`);
-            
-            $('#closePopup').click(function() {
-                $popup.fadeOut();
-                $('.popup-overlay').fadeOut(function() { $(this).remove(); });
-            });
-        }
-    });
-</script>
-    
+        </div>
+        {% if userPastes is not null %}
+            <div class="sidebar">
+                <h2 class="sidebar-title text-center">Список моих паст</h2>
+                <div class="paste-list">
+                    <ul class="paste-list-group">
+                        {% if userPastes is not empty %}
+                            {% for paste in userPastes %}
+                                <li class="paste-list-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ loop.index }}.</strong>
+                                            <span class="paste-title">{{ paste.title }}</span> 
+                                            <br>
+                                            <small class="paste-language">{{ paste.language }}</small>
+                                        </div>
+                                        <div>
+                                            <a href="{{ path('view_paste', { 'id': paste.id }) }}" class="btn btn-secondary btn-sm">Перейти</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="paste-list-item">У вас нет паст.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            const link = "{{ app.session.get('linkUnlisted')|e('js') }}";
+            if (link) {
+                $('<div class="popup-overlay"></div>').appendTo('body').fadeIn();
+                const $popup = $('<div class="popup"></div>').appendTo('body').fadeIn();
+                $popup.html(`<h3>Успех!</h3><p>Ссылка на вашу пасту: <a href="${link}" target="_blank" style="color: #66d9ef;">${link}</a></p><button id="closePopup">Закрыть</button>`);
+                
+                $('#closePopup').click(function() {
+                    $popup.fadeOut();
+                    $('.popup-overlay').fadeOut(function() { $(this).remove(); });
+                });
+            }
+        });
+    </script>
 {% endblock %}

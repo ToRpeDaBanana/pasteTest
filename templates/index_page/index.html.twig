@@ -1,27 +1,62 @@
 {% extends 'index.html.twig' %}
 
-{% block Title %}Home{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
-<div class="paste-list">
-    <ul class="list-group">
-        {% if pasteData is not empty %}
-            {% for paste in pasteData | slice(0, 10) %}
-                <li class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong>{{ loop.index }}.</strong>
-                            <span>{{ paste.title }}</span> 
-                            <br>
-                            <small>{{ paste.language }}</small>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        {% else %}
-            <li class="list-group-item">No public pastes available.</li>
+    <div class="main-container">
+        <div class="content">
+            <h2 class="text-center">Список паст</h2>
+            <div class="paste-list">
+                <ul class="paste-list-group">
+                    {% if pasteData is not empty %}
+                        {% for paste in pasteData | slice(0, 10) %}
+                            <li class="paste-list-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ loop.index }}.</strong>
+                                        <span class="paste-title">{{ paste.title }}</span> 
+                                        <br>
+                                        <small class="paste-language">{{ paste.language }}</small>
+                                    </div>
+                                    <div>
+                                        <a href="{{ path('view_paste', { 'id': paste.id }) }}" class="btn btn-secondary btn-sm">Перейти</a>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    {% else %}
+                        <li class="paste-list-item">Нет доступных публичных паст.</li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+            {% if userPastes is not null %}
+            <div class="sidebar">
+                <h2 class="sidebar-title text-center">Список моих паст</h2>
+                <div class="paste-list">
+                    <ul class="paste-list-group">
+                        {% if userPastes is not empty %}
+                            {% for paste in userPastes %}
+                                <li class="paste-list-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <strong>{{ loop.index }}.</strong>
+                                            <span class="paste-title">{{ paste.title }}</span> 
+                                            <br>
+                                            <small class="paste-language">{{ paste.language }}</small>
+                                        </div>
+                                        <div>
+                                            <a href="{{ path('view_paste', { 'id': paste.id }) }}" class="btn btn-secondary btn-sm">Перейти</a>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        {% else %}
+                            <li class="paste-list-item">У вас нет паст.</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
         {% endif %}
-    </ul>
-</div>
-
+    </div>
 {% endblock %}
