@@ -108,12 +108,20 @@
             const link = "{{ app.session.get('linkUnlisted')|e('js') }}";
             if (link) {
                 $('<div class="popup-overlay"></div>').appendTo('body').fadeIn();
-                const $popup = $('<div class="popup"></div>').appendTo('body').fadeIn();
-                $popup.html(`<h3>Успех!</h3><p>Ссылка на вашу пасту: <a href="${link}" target="_blank" style="color: #66d9ef;">${link}</a></p><button id="closePopup">Закрыть</button>`);
+                const $popup = $('<div class="popup container"></div>').appendTo('body').fadeIn();
+                $popup.html(`
+                    <h3>Успех!</h3>
+                    <p>Ссылка на вашу пасту: <a href="${link}" target="_blank" style="color: #66d9ef;">${link}</a></p>
+                    <div class="button-container">
+                        <button id="closePopup" class="btn btn-secondary">Закрыть</button>
+                    </div>
+                `);
                 
                 $('#closePopup').click(function() {
                     $popup.fadeOut();
-                    $('.popup-overlay').fadeOut(function() { $(this).remove(); });
+                    $('.popup-overlay').fadeOut(function() {
+                        $(this).remove();
+                    });
                 });
             }
         });

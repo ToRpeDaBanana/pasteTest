@@ -67,7 +67,7 @@ class PasteForm extends AbstractType
                 'placeholder' => 'Выберите вариант',
             ])
             ->add('submit', SubmitType::Class,[
-                'label' => 'Созадать пасту',
+                'label' => 'Создать пасту',
             ]);
         }
         public function configureOptions(OptionsResolver $resolver)

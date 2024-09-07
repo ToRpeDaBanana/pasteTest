@@ -54,7 +54,7 @@ class PasteController extends AbstractController
 
             // Создание полной ссылки на пасту
             if ($paste->getAccessLevel() === 'unlisted') {
-                $link = $this->generateUrl('view_paste', ['uniqueId' => $uniqueId], true);
+                $link = $this->generateUrl('view_paste_unlisted', ['uniqueId' => $uniqueId], true);
                 $sessionInterface->set('linkUnlisted', $link); // Сохраняем ссылку в сессию
                 $this->addFlash('success', 'Paste created successfully!');
             }
@@ -63,7 +63,7 @@ class PasteController extends AbstractController
         }
         $pasteData = $entityManager->getRepository(Paste::class)->findBy(
             ['accessLevel' => 'public'], // Условия поиска
-            ['id' => 'DESC'], // Сортировка по дате создания (предполагается, что поле существует)
+            ['id' => 'DESC'], // Сортировка по дате создания
             10 // Ограничение на количество записей
         );
         $userPastes = null;
