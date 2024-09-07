@@ -1,7 +1,27 @@
-<!DOCTYPE html>
+{% extends 'index.html.twig' %}
 
-<title>{% block Title %}Home{% endblock %}</title>
+{% block Title %}Home{% endblock %}
 
 {% block body %}
+<div class="paste-list">
+    <ul class="list-group">
+        {% if pasteData is not empty %}
+            {% for paste in pasteData | slice(0, 10) %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ loop.index }}.</strong>
+                            <span>{{ paste.title }}</span> 
+                            <br>
+                            <small>{{ paste.language }}</small>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li class="list-group-item">No public pastes available.</li>
+        {% endif %}
+    </ul>
+</div>
 
 {% endblock %}

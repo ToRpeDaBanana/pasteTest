@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use App\Service\PasteCleanupService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\VarDumper\VarDumper;
+use Symfony\Component\HttpFoundation\Request;
 
 class PersonalAccountController extends AbstractController
 {
@@ -18,19 +18,27 @@ class PersonalAccountController extends AbstractController
         PasteCleanupService $clear,
         SessionInterface $sessionInterface,
         EntityManagerInterface $entityManager,
+        Request $request, 
     ): Response
     {
         $loggedIn = $sessionInterface->get('logged_in');
         $userId = $sessionInterface->get('user_id');
 
-        $pasteData = $entityManager->getRepository(Paste::Class)->findAll(['user'=> $userId]);
+        // Настройка пагинации
+        $limit = 10; // Ограничение количества записей на страницу
+        $page = $request->query->getInt('page', 1); // Получаем номер страницы из запроса (по умолчанию 1)
+        $offset = ($page - 1) * $limit;
 
-        // VarDumper::dump($pasteData);
-        // exit;
+        $pasteData = $entityManager->getRepository(Paste::class)->findBy(['user' => $userId], null, $limit, $offset);
+
+        $total = count($entityManager->getRepository(Paste::class)->findBy(['user' => $userId]));
 
         $clear->cleanupExpiredPastes();
         return $this->render('personal_account/personalAccount.html.twig', [
-            'pasteData'=>$pasteData,
+            'pasteData' => $pasteData,
+            'total' => $total,
+            'page' => $page,
+            'limit' => $limit,
         ]);
     }
 }

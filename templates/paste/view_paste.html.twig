@@ -1,0 +1,6 @@
+{% extends 'index.html.twig' %}
+
+{% block body %}
+    <h2>{{ paste.title }}</h2>
+    <pre><code class="language-{{ paste.language }}">{{ paste.content }}</code></pre>
+{% endblock %}

@@ -36,6 +36,11 @@ class PasteController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $expirationTime = $form->get('expirationTime')->getData();
             $paste->setExpirationTime($expirationTime);
+            $paste->setAccessLevel($form->get('accessLevel')->getData());
+
+            // Генерация уникального URL для пасты
+            $uniqueId = md5(uniqid((string) rand(), true));
+            $paste->setUniqueId($uniqueId);
 
             // получение юзера
             if($loggedIn != false)
@@ -51,6 +56,16 @@ class PasteController extends AbstractController
             $entityManager->persist($paste);
             $entityManager->flush();
 
+            if ($paste->getAccessLevel() === 'unlisted') {
+                // Создание полной ссылки на пасту
+                $link = $this->generateUrl('view_paste', ['uniqueId' => $uniqueId], true);
+                // Сохранение ссылки на пасту в сессии для отображения в поп-апе
+                $sessionInterface->set('linkUnlisted', $link);
+                $this->addFlash('success', 'Paste created successfully!');
+            } else {
+                $this->addFlash('success', 'Paste created successfully!');
+            }
+
             $this->addFlash('success', 'Paste created successfully!');
             return $this->redirectToRoute('create_paste');
         }
@@ -63,5 +78,19 @@ class PasteController extends AbstractController
             'userData'=>$user=$entityManager->getRepository(User::Class)->findOneBy(['id'=> $userId]),
             'auth'=>$loggedIn,
             ]);
+    }
+    
+    #[Route('/viewPaste/{uniqueId}', name: 'view_paste')]
+    public function viewPaste(string $uniqueId, EntityManagerInterface $entityManager): Response
+    {
+        $paste = $entityManager->getRepository(Paste::class)->findOneBy(['uniqueId' => $uniqueId]);
+
+        if (!$paste || $paste->getAccessLevel() !== 'unlisted') {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $this->render('paste/view_paste.html.twig', [
+            'paste' => $paste,
+        ]);
     }
 }

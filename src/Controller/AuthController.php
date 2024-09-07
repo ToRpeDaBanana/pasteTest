@@ -72,9 +72,9 @@ class AuthController extends AbstractController
                 else{
                     $this->addFlash('error', 'Неверные учетные данные.');
                 }
+                 
 
             }
-
             return $this->render('auth/login.html.twig', [
                 'form' => $form->createView(),
                 ]);

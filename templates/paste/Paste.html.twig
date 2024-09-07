@@ -18,6 +18,9 @@
         <a href="{{path('app_personal_account')}}">
             <button>Account</button>
         </a>
+        <a href="{{ path('app_logout') }}">
+            <button>Logout</button>
+        </a>
         {% else %}
             <p>Hello,Guest!</p>
             <div class="conta-btn">
@@ -29,6 +32,21 @@
                 </a>
             </div>
     {% endif %}
-
+<script>
+    $(document).ready(function() {
+        // Получаем ссылку из сессии
+        const link = "{{ app.session.get('linkUnlisted')|e('js') }}";
+        if (link) {
+            $('<div class="popup-overlay"></div>').appendTo('body').fadeIn();
+            const $popup = $('<div class="popup"></div>').appendTo('body').fadeIn();
+            $popup.html(`<h3>Success!</h3><p>Your paste link: <a href="${link}" target="_blank">${link}</a></p><button id="closePopup">Close</button>`);
+            
+            $('#closePopup').click(function() {
+                $popup.fadeOut();
+                $('.popup-overlay').fadeOut(function() { $(this).remove(); });
+            });
+        }
+    });
+</script>
     
 {% endblock %}

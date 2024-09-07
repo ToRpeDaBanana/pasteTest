@@ -23,14 +23,7 @@
     <body>
         {% block body %}
 
-            <h2>Recent Pastes</h2>
-            <ul>
-            {% if (pastes is not empty) %}
-                {% for paste in pastes %}
-                    <li>{{ paste.title }} - {{ paste.content }}</li>
-                {% endfor %}
-            {% endif %}
-            </ul>
+            
 
         {% endblock %}
     </body>
