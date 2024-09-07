@@ -31,12 +31,11 @@ class PasteController extends AbstractController
 
         $form->handleRequest($request);
 
-        
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             $expirationTime = $form->get('expirationTime')->getData();
             $paste->setExpirationTime($expirationTime);
-            
 
             // получение юзера
             if($loggedIn != false)
@@ -53,19 +52,16 @@ class PasteController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Paste created successfully!');
+            return $this->redirectToRoute('create_paste');
         }
             
         $clear->cleanupExpiredPastes();
-        // $clear = $clearPaste;
-        // if(flash == 'success')
-        // {
-        //     return $this->redirectToRoute('app_index_page');
-        // }
         
 
         return $this->render('paste/Paste.html.twig', [
             'form' => $form->createView(),
-
+            'userData'=>$user=$entityManager->getRepository(User::Class)->findOneBy(['id'=> $userId]),
+            'auth'=>$loggedIn,
             ]);
     }
 }

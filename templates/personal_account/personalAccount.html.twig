@@ -1,0 +1,40 @@
+{% extends 'index.html.twig' %}
+
+{% block title %}Account{% endblock %}
+
+{% block body %}
+    <div class="contactPod-table">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+
+                        <th scope="col">Language</th>
+
+                        <th scope="col">ExpirationTime</th>
+
+                        <th scope="col">AccessLevel</th>
+                    </tr>
+                </thead>
+        <tbody>
+        {% if pasteData is not empty %}
+            {% for paste in pasteData %}
+                <tr>
+                    <th scope="row">{{loop.index}}</th>
+                    <td>{{paste.title}}</td>
+                    <td>{{paste.language}}</td>
+                    {% if paste.expirationTime != null %}
+                        <td>{{paste.expirationTime}}</td>
+                        {% else %}
+                            <td>No Expiration</td>
+                    {% endif %}
+                    <td>{{paste.accessLevel}}</td>
+                </tr>
+            
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

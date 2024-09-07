@@ -1,27 +1,34 @@
 {% extends 'index.html.twig' %}
 
+
 {% block body %}
     <h2>Upload a new paste</h2>
     {{ form_start(form) }}
         {{ form_row(form.title) }}
-        <div class="code-container">
-            {{ form_row(form.content) }}
-            <div id="highlightedCode" class="highlighted-code"></div> <!-- Элемент для выделенного кода -->
-        </div>
-        {# {{ form_row(form.content) }}
-        <div id="highlightedCode"></div> #}
+        {{ form_row(form.content) }}
+        <div id="highlightedCode"></div>
         {{ form_row(form.expirationTime) }}
         {{ form_row(form.language) }}
         {{ form_row(form.accessLevel) }}
         {{ form_row(form.submit) }}
     {{ form_end(form) }}
 
-    {# <div>
-        <h3>Highlighted Code:</h3>
-            <div id="highlightedCode" class="language-none">
-                <pre><code id="highlightedCode" class="language-none">
-                    
-                </code></pre>
+    {% if auth %}
+        <p>Hello,{{userData.username}}!</p>
+        <a href="{{path('app_personal_account')}}">
+            <button>Account</button>
+        </a>
+        {% else %}
+            <p>Hello,Guest!</p>
+            <div class="conta-btn">
+                <a href="{{path('app_login')}}">
+                    <button>Sign In</button>
+                </a>
+                <a href="{{path('register')}}">
+                    <button>Sign Up</button>
+                </a>
             </div>
-    </div> #}
+    {% endif %}
+
+    
 {% endblock %}

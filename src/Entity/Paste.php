@@ -20,7 +20,7 @@ class Paste
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $expirationTime = null;
 
     #[ORM\Column(length: 255)]
@@ -67,7 +67,7 @@ class Paste
         return $this->expirationTime;
     }
 
-    public function setExpirationTime(\DateTimeInterface $expirationTime): static
+    public function setExpirationTime(?\DateTimeInterface $expirationTime): static
     {
         $this->expirationTime = $expirationTime;
 
