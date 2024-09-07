@@ -8,7 +8,7 @@
         <h2 class="text-center">Пожалуйста, войдите</h2>
         <form method="post">
             {% if error %}
-                <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                <div class="alert alert-danger">Неверное имя пользователя или пароль.</div>
             {% endif %}
 
             {% if app.user %}
@@ -36,5 +36,4 @@
         </form>
     </div>
 </div>
-
 {% endblock %}

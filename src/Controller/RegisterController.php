@@ -4,16 +4,11 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegisterForm;
-use App\Form\LoginForm;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\VarDumper\VarDumper;
-
 
 class RegisterController extends AbstractController
 {
@@ -29,15 +24,24 @@ class RegisterController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            // Хешируем пароль перед сохранением
-            $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
-            
-            $entityManager->persist($user);
-            $entityManager->flush();
+            // Проверяем, существует ли уже пользователь с таким именем
+            $existingUser = $entityManager->getRepository(User::class)->findOneBy([
+                'username' => $user->getUsername(),
+            ]);
 
-            $this->addFlash('success', 'User registered successfully!');
+            if ($existingUser) {
+                $this->addFlash('error', 'Пользователь с таким именем уже существует.');
+            } else {
+                // Хешируем пароль перед сохранением
+                $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT));
+                
+                $entityManager->persist($user);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_login');
+                $this->addFlash('success', 'Пользователь зарегистрирован успешно!');
+
+                return $this->redirectToRoute('app_login');
+            }
         }
 
         return $this->render('register/register.html.twig', [

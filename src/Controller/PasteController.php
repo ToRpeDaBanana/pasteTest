@@ -123,5 +123,12 @@ class PasteController extends AbstractController
             'user' => $user,
         ]);
     }
+    #[Route('/clear-link-unlisted', name: 'clear_link_unlisted', methods: ['POST'])]
+    public function clearLinkUnlisted(SessionInterface $sessionInterface): Response
+    {
+        $sessionInterface->remove('linkUnlisted');
+        return new Response(null, Response::HTTP_NO_CONTENT); // Возвращаем пустой ответ
+    }
+
 
 }

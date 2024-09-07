@@ -120,7 +120,14 @@
                 $('#closePopup').click(function() {
                     $popup.fadeOut();
                     $('.popup-overlay').fadeOut(function() {
-                        $(this).remove();
+                        $(this).remove(); 
+                    });
+                    $.ajax({
+                        url: "{{ path('clear_link_unlisted') }}",
+                        type: 'POST',
+                        success: function() {
+                            console.log('Ссылка удалена из сессии.');
+                        }
                     });
                 });
             }
