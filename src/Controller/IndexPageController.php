@@ -24,7 +24,7 @@ class IndexPageController extends AbstractController
         // Получаем публичные пасты
         $pasteData = $entityManager->getRepository(Paste::class)->findBy(
             ['accessLevel' => 'public'], // Условия поиска
-            ['id' => 'DESC'], // Сортировка по дате создания
+            ['id' => 'DESC'], // Сортировка последних записей
             10 // Ограничение на количество записей
         );
 
@@ -33,7 +33,7 @@ class IndexPageController extends AbstractController
         if ($user) {
             $userPastes = $entityManager->getRepository(Paste::class)->findBy(
                 ['user' => $user], // Условия поиска по пользователю
-                ['id' => 'DESC'], // Сортировка по дате создания
+                ['id' => 'DESC'], // Сортировка последних записей
                 10 // Ограничение на количество записей
             );
         }
